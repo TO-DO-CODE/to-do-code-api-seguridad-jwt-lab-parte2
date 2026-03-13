@@ -31,14 +31,10 @@ public class AuthController {
         if (!userService.isValid(req.username(), req.password())) {
             return ResponseEntity.status(401).body(Map.of("error", "invalid_credentials"));
         }
-
         Instant now = Instant.now();
-        // default to 3600 if tokenTtlSeconds is missing
         long ttl = (props.tokenTtlSeconds() != null && props.tokenTtlSeconds() > 0) ? props.tokenTtlSeconds() : 3600;
         Instant exp = now.plusSeconds(ttl);
-
         String scope = req.username().equals("student") ? "blueprints.read blueprints.write" : "blueprints.read";
-        
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(props.issuer())
                 .issuedAt(now)
@@ -46,7 +42,6 @@ public class AuthController {
                 .subject(req.username())
                 .claim("scope", scope)
                 .build();
-
         JwsHeader jws = JwsHeader.with(() -> "RS256").build();
         String token = this.encoder.encode(JwtEncoderParameters.from(jws, claims)).getTokenValue();
 

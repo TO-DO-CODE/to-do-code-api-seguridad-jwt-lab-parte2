@@ -29,18 +29,16 @@ public class BlueprintsAPIController {
         this.services = services;
     }
 
-    // GET /api/v1/blueprints
     @Operation(summary = "Get all blueprints", description = "Returns a list of all blueprints")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
+
     @GetMapping
     public ResponseEntity<edu.eci.arsw.blueprints.controllers.ApiResponse<Set<Blueprint>>> getAll() {
-        return ResponseEntity
-                .ok(new edu.eci.arsw.blueprints.controllers.ApiResponse<>(200, "Success", services.getAllBlueprints()));
+        return ResponseEntity.ok(new edu.eci.arsw.blueprints.controllers.ApiResponse<>(200, "Success", services.getAllBlueprints()));
     }
 
-    // GET /api/v1/blueprints/{author}
     @Operation(summary = "Get blueprints by author", description = "Returns all blueprints for a specific author")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the blueprints"),
@@ -56,13 +54,12 @@ public class BlueprintsAPIController {
                     .body(new edu.eci.arsw.blueprints.controllers.ApiResponse<>(404, e.getMessage(), null));
         }
     }
-
-    // GET /api/v1/blueprints/{author}/{bpname}
     @Operation(summary = "Get blueprint by author and name", description = "Returns a specific blueprint")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the blueprint"),
             @ApiResponse(responseCode = "404", description = "Blueprint not found")
     })
+
     @GetMapping("/{author}/{bpname}")
     public ResponseEntity<edu.eci.arsw.blueprints.controllers.ApiResponse<?>> byAuthorAndName(
             @PathVariable String author, @PathVariable String bpname) {
@@ -74,13 +71,12 @@ public class BlueprintsAPIController {
                     .body(new edu.eci.arsw.blueprints.controllers.ApiResponse<>(404, e.getMessage(), null));
         }
     }
-
-    // POST /api/v1/blueprints
     @Operation(summary = "Create a new blueprint", description = "Creates a new blueprint with points")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Blueprint created"),
             @ApiResponse(responseCode = "400", description = "Invalid input or blueprint already exists")
     })
+
     @PostMapping
     public ResponseEntity<edu.eci.arsw.blueprints.controllers.ApiResponse<?>> add(
             @Valid @RequestBody NewBlueprintRequest req) {
@@ -95,8 +91,6 @@ public class BlueprintsAPIController {
                             "Error creating blueprint: " + e.getMessage(), null));
         }
     }
-
-    // PUT /api/v1/blueprints/{author}/{bpname}/points
     @Operation(summary = "Add a point to a blueprint", description = "Updates an existing blueprint by adding a point")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Point added accepted"),
